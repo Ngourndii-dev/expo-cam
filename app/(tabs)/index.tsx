@@ -5,14 +5,24 @@ import { Link } from 'expo-router';
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
+      <h1>Welcome to Pick Cam with expo go and react native </h1>
       <Link href='/Camera' style={styles.link}>
         Caméra
+      </Link>
+      <hr />
+      <Link href='/Image' style={styles.link}>
+        View image
       </Link>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  h1:{
+    color:'red',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     justifyContent: 'center',

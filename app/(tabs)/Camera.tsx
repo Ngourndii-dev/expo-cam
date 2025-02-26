@@ -7,7 +7,7 @@ export default function App() {
   const [facing, setFacing] = useState<CameraType>('back');
   const [isBlackAndWhite, setIsBlackAndWhite] = useState(false);
   const [permission, requestPermission] = useCameraPermissions();
-  const [sound, setSound] = useState<any>(null); // Variable pour gérer le son
+  const [sound, setSound] = useState<any>(null);
 
   if (!permission) {
     return <View />;
@@ -24,15 +24,14 @@ export default function App() {
 
   async function playSound() {
     const { sound } = await Audio.Sound.createAsync(
-      require('../../assets/son.mp3') // Remplacez par votre chemin de fichier MP3
+      require('../../assets/son.mp3') 
     );
     setSound(sound);
-    await sound.playAsync(); // Joue le son
+    await sound.playAsync();
   }
 
-  // Fonction pour changer l'orientation de la caméra et jouer le son
   function toggleCameraFacing() {
-    playSound(); // Appeler la fonction playSound
+    playSound();
     setFacing((current) => (current === 'back' ? 'front' : 'back'));
   }
 
