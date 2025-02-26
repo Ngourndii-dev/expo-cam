@@ -24,7 +24,7 @@ export default function App() {
 
   async function playSound() {
     const { sound } = await Audio.Sound.createAsync(
-      require('../../assets/son.mp3') 
+      require('../../assets/son.mp3')
     );
     setSound(sound);
     await sound.playAsync();
@@ -44,7 +44,7 @@ export default function App() {
       <CameraView
         style={[
           styles.camera,
-          isBlackAndWhite && { filter: 'grayscale(100%)' }, 
+          isBlackAndWhite && { filter: 'grayscale(100%)' },
         ]}
         facing={facing}
       >
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f0f0f0', 
+    backgroundColor: '#f0f0f0',
   },
   message: {
     textAlign: 'center',
@@ -76,38 +76,39 @@ const styles = StyleSheet.create({
   },
   camera: {
     flex: 1,
-    width: '80%', 
+    width: '80%',
     height: '100%',
     borderRadius: 15,
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   buttonContainer: {
     flexDirection: 'row',
     position: 'absolute',
-    bottom: 20,
+    bottom: 30,
     left: 0,
     right: 0,
     justifyContent: 'space-evenly',
     alignItems: 'center',
     paddingVertical: 10,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
   },
   button: {
     alignItems: 'center',
     backgroundColor: '#6200ea',
-    paddingVertical: 10,
-    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 12,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowRadius: 6,
+    elevation: 5,
   },
   text: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#ffffff',
+    color: '#fff',
   },
 });

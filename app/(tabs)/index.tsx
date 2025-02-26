@@ -1,48 +1,59 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import { Link } from 'expo-router';
 
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
-      <h1>Welcome to Pick Cam with expo go and react native </h1>
+      <Text style={styles.title}>Welcome to Pick Cam with Expo Go and React Native</Text>
       <Link href='/Camera' style={styles.link}>
-        Caméra
+        Pick
       </Link>
-      <hr />
+      <View style={styles.divider}></View>
       <Link href='/Image' style={styles.link}>
-        View image
+        View Image
       </Link>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  h1:{
-    color:'red',
-    justifyContent: 'center',
-    alignItems: 'center',
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 20,
+    textAlign: 'center',
+    fontFamily: 'Poppins-Regular',
   },
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f9f9f9',
+    padding: 20,
   },
   link: {
-    backgroundColor: '#6200ea', 
-    color: '#ffffff',
-    fontSize: 20, 
-    fontWeight: '600', 
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    textAlign: 'center', 
-    textDecorationLine: 'none', 
-    shadowColor: '#000', 
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
+    backgroundColor: '#6200ea',
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '600',
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    borderRadius: 10,
+    textAlign: 'center',
+    textDecorationLine: 'none',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 5,
+    marginBottom: 15,
+  },
+  divider: {
+    width: '80%',
+    height: 1,
+    backgroundColor: '#ddd',
+    marginVertical: 20,
   },
 });
