@@ -7,7 +7,7 @@ export default function App() {
   const [facing, setFacing] = useState<CameraType>('back');
   const [isBlackAndWhite, setIsBlackAndWhite] = useState(false);
   const [permission, requestPermission] = useCameraPermissions();
-  const [sound, setSound] = useState<any>(null);
+  const [sound, setSound] = useState<any>(null); 
 
   if (!permission) {
     return <View />;
@@ -24,14 +24,14 @@ export default function App() {
 
   async function playSound() {
     const { sound } = await Audio.Sound.createAsync(
-      require('../../assets/son.mp3')
+      require('../../assets/son.mp3') 
     );
     setSound(sound);
-    await sound.playAsync();
+    await sound.playAsync(); 
   }
 
   function toggleCameraFacing() {
-    playSound();
+    playSound(); 
     setFacing((current) => (current === 'back' ? 'front' : 'back'));
   }
 
@@ -44,7 +44,7 @@ export default function App() {
       <CameraView
         style={[
           styles.camera,
-          isBlackAndWhite && { filter: 'grayscale(100%)' },
+          isBlackAndWhite && styles.blackAndWhiteFilter, 
         ]}
         facing={facing}
       >
@@ -66,49 +66,51 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)', 
   },
   message: {
     textAlign: 'center',
     paddingBottom: 20,
     fontSize: 16,
-    color: '#333',
+    color: '#fff', 
   },
   camera: {
     flex: 1,
-    width: '80%',
+    width: '100%', 
     height: '100%',
     borderRadius: 15,
-    overflow: 'hidden',
+    overflow: 'hidden'
+  },
+  blackAndWhiteFilter: {
+    filter: 'grayscale(100%) contrast(150%)', 
   },
   buttonContainer: {
     flexDirection: 'row',
     position: 'absolute',
-    bottom: 30,
+    bottom: 20,
     left: 0,
     right: 0,
     justifyContent: 'space-evenly',
     alignItems: 'center',
     paddingVertical: 10,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
   },
   button: {
     alignItems: 'center',
     backgroundColor: '#6200ea',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 12,
+    paddingVertical: 10,
+    borderRadius: 8,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 5,
+    shadowRadius: 4,
+    elevation: 3,
   },
   text: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#fff',
+    color: '#ffffff',
   },
 });

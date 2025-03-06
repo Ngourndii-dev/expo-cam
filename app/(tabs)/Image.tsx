@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { View, Image, StyleSheet, Animated } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, Animated, Text } from 'react-native'; // Ajoutez Text ici
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 
@@ -7,6 +7,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [appReady, setAppReady] = useState(false);
+  const [splashComplete, setSplashComplete] = useState(false);
   const [fontsLoaded] = useFonts({
     'Poppins-Regular': require('../../assets/fonts/SpaceMono-Regular.ttf'),
   });
@@ -15,22 +16,41 @@ export default function App() {
 
   useEffect(() => {
     async function prepare() {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setAppReady(true);
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: true,
-      }).start();
-      await SplashScreen.hideAsync();
+      try {
+        // Simule un chargement asynchrone (par exemple, chargement de données ou de ressources)
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        // Une fois que tout est prêt, on met à jour l'état
+        setAppReady(true);
+
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }).start(() => {
+          setSplashComplete(true);
+          SplashScreen.hideAsync();
+        });
+      } catch (e) {
+        console.warn(e);
+      }
     }
+
     if (fontsLoaded) {
       prepare();
     }
   }, [fontsLoaded]);
 
-  if (!appReady) {
-    return null;
+  if (!splashComplete) {
+    return (
+      <View style={styles.container}>
+        <Animated.Image 
+          source={require('../../assets/pollua.png')} 
+          style={[styles.image, { opacity: fadeAnim }]} 
+        />
+        <Text style={styles.loadingText}>Chargement en cours...</Text>
+      </View>
+    );
   }
 
   return (
@@ -39,6 +59,7 @@ export default function App() {
         source={require('../../assets/pollua.png')} 
         style={[styles.image, { opacity: fadeAnim }]} 
       />
+      <Text style={styles.welcomeText}>Bienvenue !</Text>
     </View>
   );
 }
@@ -61,5 +82,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.6,
     shadowRadius: 8,
     elevation: 8,
+  },
+  loadingText: {
+    marginTop: 20,
+    fontSize: 18,
+    color: '#fff',
+  },
+  welcomeText: {
+    marginTop: 20,
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
   },
 });

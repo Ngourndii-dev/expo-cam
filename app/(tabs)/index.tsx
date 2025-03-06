@@ -1,59 +1,163 @@
-import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import { Link } from 'expo-router';
+import React from "react";
+import {
+  useColorScheme,
+  Pressable,
+  View,
+  Text,
+  StyleSheet,
+  useWindowDimensions,
+} from "react-native";
+import { StatusBar } from "expo-status-bar";
+import { useRouter } from "expo-router";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import * as ScreenOrientation from 'expo-screen-orientation';
 
-export default function HomeScreen() {
+const THEME = {
+  light: {
+    background: "#F0F4F8",
+    text: "#1B1F3B",
+    title: "#0D0D0D",
+    buttonBg: "#1B1F3B",
+    buttonText: "#FFFFFF",
+    divider: "#CCCCCC",
+  },
+  dark: {
+    background: "#0D0D0D",
+    text: "#FFFFFF",
+    title: "#FFFFFF",
+    buttonBg: "#1B1F3B",
+    buttonText: "#FFFFFF",
+    divider: "#333333",
+  },
+};
+
+const App = () => {
+  const colorScheme = useColorScheme();
+  const { width, height } = useWindowDimensions();
+  const router = useRouter();
+  const isPortrait = height > width;
+  const theme = THEME[colorScheme || "light"];
+
+  const toggleOrientation = async () => {
+    if (isPortrait) {
+      await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+    } else {
+      await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome to Pick Cam with Expo Go and React Native</Text>
-      <Link href='/Camera' style={styles.link}>
-        Pick
-      </Link>
-      <View style={styles.divider}></View>
-      <Link href='/Image' style={styles.link}>
-        View Image
-      </Link>
-    </View>
+    <Animated.View
+      entering={FadeIn.duration(300)}
+      exiting={FadeOut.duration(300)}
+      style={[styles.container, { backgroundColor: theme.background }]}
+    >
+      <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
+
+      <Text style={[styles.title, { color: theme.title, fontSize: isPortrait ? 30 : 26 }]}>📸 Pick Cam</Text>
+
+      <View style={styles.infoContainer}>
+        <Text style={[styles.infoText, { color: theme.text }]}>
+          {colorScheme === "dark" ? "🌙 Mode Sombre" : "☀️ Mode Clair"}
+        </Text>
+        <Text style={[styles.infoText, { color: theme.text }]}>
+          {isPortrait ? "📱 Portrait" : "🖥️ Paysage"}
+        </Text>
+      </View>
+
+      <View style={[styles.divider, { backgroundColor: theme.divider }]} />
+
+      <Pressable
+        onPress={() => router.push("/Camera")}
+        style={({ pressed }) => [
+          styles.button,
+          {
+            backgroundColor: theme.buttonBg,
+            transform: [{ scale: pressed ? 0.95 : 1 }],
+            opacity: pressed ? 0.8 : 1,
+          },
+        ]}
+      >
+        <Text style={[styles.buttonText, { color: theme.buttonText }]}>Prendre une photo</Text>
+      </Pressable>
+
+      <Pressable
+        onPress={() => router.push("/Image")}
+        style={({ pressed }) => [
+          styles.button,
+          {
+            backgroundColor: theme.buttonBg,
+            transform: [{ scale: pressed ? 0.95 : 1 }],
+            opacity: pressed ? 0.8 : 1,
+          },
+        ]}
+      >
+        <Text style={[styles.buttonText, { color: theme.buttonText }]}>Voir les images</Text>
+      </Pressable>
+
+      <Pressable
+        onPress={toggleOrientation}
+        style={({ pressed }) => [
+          styles.button,
+          {
+            backgroundColor: theme.buttonBg,
+            transform: [{ scale: pressed ? 0.95 : 1 }],
+            opacity: pressed ? 0.8 : 1,
+          },
+        ]}
+      >
+        <Text style={[styles.buttonText, { color: theme.buttonText }]}>
+          {isPortrait ? "Passer en Paysage" : "Passer en Portrait"}
+        </Text>
+      </Pressable>
+    </Animated.View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 20,
-    textAlign: 'center',
-    fontFamily: 'Poppins-Regular',
-  },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f9f9f9',
+    alignItems: "center",
+    justifyContent: "center",
     padding: 20,
   },
-  link: {
-    backgroundColor: '#6200ea',
-    color: '#fff',
+  title: {
+    fontWeight: "bold",
+    marginBottom: 30,
+    textAlign: "center",
+    fontFamily: "Poppins-SemiBold",
+  },
+  infoContainer: {
+    alignItems: "center",
+    marginBottom: 30,
+  },
+  infoText: {
     fontSize: 18,
-    fontWeight: '600',
-    paddingVertical: 12,
-    paddingHorizontal: 25,
-    borderRadius: 10,
-    textAlign: 'center',
-    textDecorationLine: 'none',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 6,
-    elevation: 5,
-    marginBottom: 15,
+    marginVertical: 8,
+    fontWeight: "500",
   },
   divider: {
-    width: '80%',
+    width: "70%",
     height: 1,
-    backgroundColor: '#ddd',
-    marginVertical: 20,
+    marginVertical: 30,
+  },
+  button: {
+    width: "30%",
+    padding: 16,
+    borderRadius: 30,
+    marginBottom: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 6,
+  },
+  buttonText: {
+    fontSize: 17,
+    fontWeight: "bold",
   },
 });
+
+export default App;
