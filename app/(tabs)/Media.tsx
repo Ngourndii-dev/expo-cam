@@ -61,7 +61,7 @@ const App = () => {
           {colorScheme === "dark" ? "🌙 night" : "☀️ light"}
         </Text>
         <Text style={[styles.infoText, { color: theme.text }]}>
-          {isPortrait ? "📱 Portrait" : "🖥️ Landscape"}" :
+          {isPortrait ? "📱 Portrait" : "🖥️ Landscape"}
         </Text>
         
       </View>
