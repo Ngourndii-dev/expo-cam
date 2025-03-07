@@ -58,10 +58,10 @@ const App = () => {
 
       <View style={styles.infoContainer}>
         <Text style={[styles.infoText, { color: theme.text }]}>
-          {colorScheme === "dark" ? "🌙 Mode Sombre" : "☀️ Mode Clair"}
+          {colorScheme === "dark" ? "🌙 night" : "☀️ light"}
         </Text>
         <Text style={[styles.infoText, { color: theme.text }]}>
-          {isPortrait ? "📱 Portrait" : "🖥️ Paysage"}
+          {isPortrait ? "📱 Portrait" : "🖥️ Landscape"}" :
         </Text>
         
       </View>
@@ -79,36 +79,9 @@ const App = () => {
           },
         ]}
       >
-        <Text style={[styles.buttonText, { color: theme.buttonText }]}>Prendre une photo</Text>
+        <Text style={[styles.buttonText, { color: theme.buttonText }]}>Pick</Text>
       </Pressable>
-   
 
-      <Pressable
-        onPress={() => router.push("/Image")}
-        style={({ pressed }) => [
-          styles.button,
-          {
-            backgroundColor: theme.buttonBg,
-            transform: [{ scale: pressed ? 0.95 : 1 }],
-            opacity: pressed ? 0.8 : 1,
-          },
-        ]}
-      >
-        <Text style={[styles.buttonText, { color: theme.buttonText }]}>Voir les images</Text>
-      </Pressable>
-      <Pressable
-        onPress={() => router.push("/Course")}
-        style={({ pressed }) => [
-          styles.button,
-          {
-            backgroundColor: theme.buttonBg,
-            transform: [{ scale: pressed ? 0.95 : 1 }],
-            opacity: pressed ? 0.8 : 1,
-          },
-        ]}
-      >
-        <Text style={[styles.buttonText, { color: theme.buttonText }]}>Course</Text>
-      </Pressable>
 
       <Pressable
         onPress={toggleOrientation}
@@ -122,7 +95,7 @@ const App = () => {
         ]}
       >
         <Text style={[styles.buttonText, { color: theme.buttonText }]}>
-          {isPortrait ? "Passer en Paysage" : "Passer en Portrait"}
+          {isPortrait ? "Switch to Landscape" : "Switch to Portrait"}
         </Text>
       </Pressable>
     </Animated.View>
