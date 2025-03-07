@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Animated, Text } from 'react-native'; // Ajoutez Text ici
+import { View, StyleSheet, Animated, Text } from 'react-native'; 
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 

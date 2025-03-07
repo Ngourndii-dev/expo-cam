@@ -1,163 +1,105 @@
-import React from "react";
-import {
-  useColorScheme,
-  Pressable,
-  View,
-  Text,
-  StyleSheet,
-  useWindowDimensions,
-} from "react-native";
-import { StatusBar } from "expo-status-bar";
-import { useRouter } from "expo-router";
-import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
-import * as ScreenOrientation from 'expo-screen-orientation';
+import { View, StyleSheet } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import { useState } from 'react';
+import { type ImageSource } from 'expo-image';
 
-const THEME = {
-  light: {
-    background: "#F0F4F8",
-    text: "#1B1F3B",
-    title: "#0D0D0D",
-    buttonBg: "#1B1F3B",
-    buttonText: "#FFFFFF",
-    divider: "#CCCCCC",
-  },
-  dark: {
-    background: "#0D0D0D",
-    text: "#FFFFFF",
-    title: "#FFFFFF",
-    buttonBg: "#1B1F3B",
-    buttonText: "#FFFFFF",
-    divider: "#333333",
-  },
-};
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import Button from '@/components/Button';
+import ImageViewer from '@/components/ImageViewer';
+import IconButton from '@/components/IconButton';
+import CircleButton from '@/components/CircleButton';
+import EmojiPicker from '@/components/EmojiPicker';
+import EmojiList from '@/components/EmojiList';
 
-const App = () => {
-  const colorScheme = useColorScheme();
-  const { width, height } = useWindowDimensions();
-  const router = useRouter();
-  const isPortrait = height > width;
-  const theme = THEME[colorScheme || "light"];
+import EmojiSticker from '@/components/EmojiSticker';
 
-  const toggleOrientation = async () => {
-    if (isPortrait) {
-      await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+
+const PlaceholderImage = require('@/assets/pollua.png');
+
+export default function Index() {
+  const [selectedImage, setSelectedImage] = useState<string | undefined>(undefined);
+  const [showAppOptions, setShowAppOptions] = useState<boolean>(false);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+   const [pickedEmoji, setPickedEmoji] = useState<ImageSource | undefined>(undefined);
+
+
+  const pickImageAsync = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setSelectedImage(result.assets[0].uri);
+      setShowAppOptions(true);
     } else {
-      await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
+      alert('You did not select any image.');
     }
   };
 
+  const onReset = () => {
+    setShowAppOptions(false);
+  };
+
+  const onAddSticker = () => {
+    setIsModalVisible(true);
+  };
+
+  const onModalClose = () => {
+    setIsModalVisible(false);
+  };
+
+  const onSaveImageAsync = async () => {
+  };
   return (
-    <Animated.View
-      entering={FadeIn.duration(300)}
-      exiting={FadeOut.duration(300)}
-      style={[styles.container, { backgroundColor: theme.background }]}
-    >
-      <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
-
-      <Text style={[styles.title, { color: theme.title, fontSize: isPortrait ? 30 : 26 }]}>📸 Pick Cam</Text>
-
-      <View style={styles.infoContainer}>
-        <Text style={[styles.infoText, { color: theme.text }]}>
-          {colorScheme === "dark" ? "🌙 Mode Sombre" : "☀️ Mode Clair"}
-        </Text>
-        <Text style={[styles.infoText, { color: theme.text }]}>
-          {isPortrait ? "📱 Portrait" : "🖥️ Paysage"}
-        </Text>
+    <GestureHandlerRootView style={styles.container}>
+       <View style={styles.container}>
+      <View style={styles.imageContainer}>
+        <ImageViewer imgSource={PlaceholderImage} selectedImage={selectedImage} />
+        {pickedEmoji && <EmojiSticker imageSize={40} stickerSource={pickedEmoji} />}
       </View>
-
-      <View style={[styles.divider, { backgroundColor: theme.divider }]} />
-
-      <Pressable
-        onPress={() => router.push("/Camera")}
-        style={({ pressed }) => [
-          styles.button,
-          {
-            backgroundColor: theme.buttonBg,
-            transform: [{ scale: pressed ? 0.95 : 1 }],
-            opacity: pressed ? 0.8 : 1,
-          },
-        ]}
-      >
-        <Text style={[styles.buttonText, { color: theme.buttonText }]}>Prendre une photo</Text>
-      </Pressable>
-
-      <Pressable
-        onPress={() => router.push("/Image")}
-        style={({ pressed }) => [
-          styles.button,
-          {
-            backgroundColor: theme.buttonBg,
-            transform: [{ scale: pressed ? 0.95 : 1 }],
-            opacity: pressed ? 0.8 : 1,
-          },
-        ]}
-      >
-        <Text style={[styles.buttonText, { color: theme.buttonText }]}>Voir les images</Text>
-      </Pressable>
-
-      <Pressable
-        onPress={toggleOrientation}
-        style={({ pressed }) => [
-          styles.button,
-          {
-            backgroundColor: theme.buttonBg,
-            transform: [{ scale: pressed ? 0.95 : 1 }],
-            opacity: pressed ? 0.8 : 1,
-          },
-        ]}
-      >
-        <Text style={[styles.buttonText, { color: theme.buttonText }]}>
-          {isPortrait ? "Passer en Paysage" : "Passer en Portrait"}
-        </Text>
-      </Pressable>
-    </Animated.View>
-  );
-};
+      {showAppOptions ? (
+        <View style={styles.optionsContainer}>
+          <View style={styles.optionsRow}>
+            <IconButton icon="refresh" label="Reset" onPress={onReset} />
+            <CircleButton onPress={onAddSticker} />
+            <IconButton icon="save-alt" label="Save" onPress={onSaveImageAsync} />
+          </View>
+        </View>
+      ) : (
+        <View style={styles.footerContainer}>
+          <Button theme="primary" label="Choose a photo" onPress={pickImageAsync} />
+          <Button label="Use this photo" onPress={() => setShowAppOptions(true)} />
+        </View>
+      )}
+      <EmojiPicker isVisible={isModalVisible} onClose={onModalClose}>
+        <EmojiList onSelect={setPickedEmoji} onCloseModal={onModalClose} />
+      </EmojiPicker>
+    </View>
+    </GestureHandlerRootView>
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
+    backgroundColor: '#25292e',
+    alignItems: 'center',
   },
-  title: {
-    fontWeight: "bold",
-    marginBottom: 30,
-    textAlign: "center",
-    fontFamily: "Poppins-SemiBold",
+  imageContainer: {
+    flex: 1,
   },
-  infoContainer: {
-    alignItems: "center",
-    marginBottom: 30,
+  footerContainer: {
+    flex: 1 / 3,
+    alignItems: 'center',
   },
-  infoText: {
-    fontSize: 18,
-    marginVertical: 8,
-    fontWeight: "500",
+  optionsContainer: {
+    position: 'absolute',
+    bottom: 80,
   },
-  divider: {
-    width: "70%",
-    height: 1,
-    marginVertical: 30,
-  },
-  button: {
-    width: "30%",
-    padding: 16,
-    borderRadius: 30,
-    marginBottom: 15,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 6,
-  },
-  buttonText: {
-    fontSize: 17,
-    fontWeight: "bold",
+  optionsRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
   },
 });
-
-export default App;
